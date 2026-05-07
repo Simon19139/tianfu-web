@@ -2332,23 +2332,20 @@
             const submitTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
             
             const feishuMessage = {
-              msg_type: 'post',
+              msg_type: 'text',
               content: {
-                post: {
-                  zh_cn: {
-                    title: '🎁 天赋自在 - 新的预约申请',
-                    content: [
-                      [[{"tag": "text", "text": "📋 服务类型：" + (serviceTypeMap[bookingForm.serviceType] || bookingForm.serviceType)}]],
-                      [[{"tag": "text", "text": "👤 姓名：" + bookingForm.name}]],
-                      [[{"tag": "text", "text": "📞 手机号：" + bookingForm.phone}]],
-                      [[{"tag": "text", "text": "🎂 出生日期：" + bookingForm.birthDate}]],
-                      [[{"tag": "text", "text": "🕐 出生时辰：" + bookingForm.birthHour}]],
-                      [[{"tag": "text", "text": "📝 咨询目的：" + (bookingForm.purpose || '未填写')}]],
-                      [[{"tag": "text", "text": "📅 期望预约时间：" + (bookingForm.preferDate || '未指定')}]],
-                      [[{"tag": "text", "text": "⏰ 提交时间：" + submitTime}]]
-                    ]
-                  }
-                }
+                text: [
+                  '🎁 天赋自在 - 新的预约申请',
+                  '',
+                  '📋 服务类型：' + (serviceTypeMap[bookingForm.serviceType] || bookingForm.serviceType),
+                  '👤 姓名：' + bookingForm.name,
+                  '📞 手机号：' + bookingForm.phone,
+                  '🎂 出生日期：' + bookingForm.birthDate,
+                  '🕐 出生时辰：' + bookingForm.birthHour,
+                  '📝 咨询目的：' + (bookingForm.purpose || '未填写'),
+                  '📅 期望预约时间：' + (bookingForm.preferDate || '未指定'),
+                  '⏰ 提交时间：' + submitTime
+                ].join('\n')
               }
             }
             
