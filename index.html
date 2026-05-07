@@ -2352,14 +2352,19 @@
               }
             }
             
-            // 发送飞书通知（使用no-cors模式避免CORS问题）
+            // 发送飞书通知（飞书Webhook支持CORS）
             fetch(FEISHU_WEBHOOK_URL, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(feishuMessage),
-              mode: 'no-cors'
+              body: JSON.stringify(feishuMessage)
+            }).then(res => res.json()).then(data => {
+              if (data.StatusCode === 0) {
+                console.log('飞书通知发送成功')
+              } else {
+                console.log('飞书通知发送失败：', data.StatusMessage)
+              }
             }).catch(err => {
-              console.log('飞书通知发送失败（可能因CORS限制，但数据仍会推送）', err)
+              console.log('飞书通知发送失败：', err)
             })
             
             // 模拟提交
