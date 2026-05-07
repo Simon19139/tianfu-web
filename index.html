@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>天赋自在 - 激活天赋、还你自在</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #FAFAFA;
+      color: #333333;
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 750px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 80px;
+    }
+    
+    /* Logo CSS */
+    .logo-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 0 auto 12px;
+    }
+    
+    .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* 页面容器 */
+    .page {
+      display: none;
+    }
+    
+    .page.active {
+      display: block;
+    }
+    
+    /* Banner样式 */
+    .banner {
+      position: relative;
+      padding: 30px 20px 40px;
+      background: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #7C3AED 100%);
+      overflow: hidden;
+      text-align: center;
+    }
+    
+    .banner-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+    
+    .banner-decoration {
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 150px;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    
+    .banner-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #FFFFFF;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      margin-bottom: 8px;
+    }
+    
+    .banner-slogan {
+      font-size: 16px;
+      color: #FFFFFF;
+      opacity: 0.95;
+    }
+    
+    /* 容器 */
+    .container {
+      padding: 15px;
+    }
+    
+    /* 卡片样式 */
+    .card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 15px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* 服务网格 */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: -20px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .service-item {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 18px 12px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .service-item:active {
+      transform: scale(0.98);
+    }
+    
+    .service-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    
+    .service-name {
+      display: block;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 4px;
+    }
+    
+    .service-desc {
+      display: block;
+      font-size: 12px;
+      color: #999999;
+    }
+    
+    /* 区块标题 */
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 15px;
+      padding-left: 10px;
+      border-left: 6px solid #7C3AED;
+    }
+    
+    /* 快捷入口 */
+    .quick-entry {
+      margin-top: 25px;
+    }
+    
+    .entry-list {
+      background: #FFFFFF;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .entry-item {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid #F5F5F5;
+      cursor: pointer;
+    }
+    
+    .entry-item:last-child {
+      border-bottom: none;
+    }
+    
+    .entry-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-right: 12px;
+    }
+    
+    .entry-info {
+      flex: 1;
+    }
+    
+    .entry-name {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 3px;
+    }
+    
+    .entry-tips {
+      display: block;
+      font-size: 12px;
+      color: #999999;
+    }
+    
+    .entry-arrow {
+      font-size: 20px;
+      color: #CCCCCC;
+    }
+    
+    /* 优势列表 */
+    .advantages {
+      margin-top: 25px;
+      margin-bottom: 15px;
+    }
+    
+    .advantage-list {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .advantage-item {
+      display: flex;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #F5F5F5;
+    }
+    
+    .advantage-item:last-child {
+      border-bottom: none;
+    }
+    
+    .advantage-icon {
+      font-size: 18px;
+      margin-right: 10px;
+      margin-top: 2px;
+    }
+    
+    .advantage-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 3px;
+    }
+    
+    .advantage-desc {
+      display: block;
+      font-size: 12px;
+      color: #666666;
+      line-height: 1.5;
+    }
+    
+    /* TabBar */
+    .tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 750px;
+      height: 60px;
+      background: #FFFFFF;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      z-index: 100;
+    }
+    
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 15px;
+      cursor: pointer;
+      color: #999999;
+      transition: color 0.3s;
+    }
+    
+    .tab-item.active {
+      color: #7C3AED;
+    }
+    
+    .tab-icon {
+      font-size: 22px;
+      margin-bottom: 2px;
+    }
+    
+    .tab-text {
+      font-size: 11px;
+    }
+    
+    /* 测试页面 */
+    .test-header {
+      background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
+      padding: 30px 20px;
+      text-align: center;
+    }
+    
+    .header-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+    
+    .header-title {
+      display: block;
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+    
+    .header-desc {
+      display: block;
+      font-size: 14px;
+      color: #FFFFFF;
+      opacity: 0.9;
+    }
+    
+    .test-selector {
+      padding: 12px;
+    }
+    
+    .selector-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 12px;
+    }
+    
+    .test-type-card {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      background: #F8F7FA;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    
+    .type-icon {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    
+    .type-name {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 3px;
+    }
+    
+    .type-desc {
+      display: block;
+      font-size: 12px;
+      color: #999999;
+    }
+    
+    .type-arrow {
+      font-size: 18px;
+      color: #CCCCCC;
+      margin-left: auto;
+    }
+    
+    .tips-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 8px;
+    }
+    
+    .tips-item {
+      display: block;
+      font-size: 13px;
+      color: #666666;
+      line-height: 1.6;
+      margin-bottom: 4px;
+    }
+    
+    /* 答题页面 */
+    .question-header {
+      padding: 15px 20px;
+      background: #FFFFFF;
+    }
+    
+    .progress-bar {
+      height: 4px;
+      background: #E5E5E5;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7C3AED, #A855F7);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+    
+    .progress-text {
+      font-size: 13px;
+      color: #999999;
+    }
+    
+    .question-container {
+      padding: 20px;
+    }
+    
+    .question-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1A1A1A;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      display: block;
+    }
+    
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .option-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 12px;
+      background: #FFFFFF;
+      border: 2px solid #E5E5E5;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .option-item.selected {
+      border-color: #7C3AED;
+      background: #F5F3FF;
+    }
+    
+    .option-letter {
+      width: 24px;
+      height: 24px;
+      background: #F0F0F0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666666;
+      margin-right: 10px;
+    }
+    
+    .option-item.selected .option-letter {
+      background: #7C3AED;
+      color: #FFFFFF;
+    }
+    
+    .option-text {
+      flex: 1;
+      font-size: 15px;
+      color: #333333;
+    }
+    
+    .question-actions {
+      display: flex;
+      gap: 12px;
+      padding: 20px;
+    }
+    
+    .action-btn {
+      flex: 1;
+      height: 44px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .prev-btn {
+      background: #F5F5F5;
+      color: #666666;
+    }
+    
+    .next-btn {
+      background: linear-gradient(135deg, #7C3AED, #A855F7);
+      color: #FFFFFF;
+    }
+    
+    .next-btn:disabled {
+      background: #E5E5E5;
+      color: #CCCCCC;
+    }
+    
+    /* 结果页面 */
+    .result-header {
+      background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
+      padding: 30px 20px;
+      text-align: center;
+    }
+    
+    .result-icon {
+      font-size: 50px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    
+    .result-type {
+      font-size: 18px;
+      color: #FFFFFF;
+      opacity: 0.9;
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .result-name {
+      font-size: 24px;
+      font-weight: 700;
+      color: #FFFFFF;
+      display: block;
+    }
+    
+    .result-desc {
+      font-size: 15px;
+      color: #333333;
+      line-height: 1.8;
+    }
+    
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #F0F0F0;
+    }
+    
+    .keywords-text {
+      font-size: 14px;
+      color: #7C3AED;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    .strength-text, .careers-text {
+      font-size: 14px;
+      color: #666666;
+      line-height: 1.6;
+      display: block;
+      margin-bottom: 6px;
+    }
+    
+    .intelligence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .intelligence-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .intel-icon {
+      font-size: 18px;
+      margin-right: 8px;
+    }
+    
+    .intel-name {
+      font-size: 13px;
+      color: #333333;
+      display: block;
+      margin-bottom: 4px;
+    }
+    
+    .intel-bar {
+      width: 120px;
+      height: 6px;
+      background: #F0F0F0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-right: 8px;
+    }
+    
+    .intel-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7C3AED, #A855F7);
+      border-radius: 3px;
+    }
+    
+    .intel-score {
+      font-size: 13px;
+      color: #7C3AED;
+      font-weight: 600;
+    }
+    
+    .result-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    
+    .retry-btn {
+      background: #F5F5F5;
+      color: #666666;
+    }
+    
+    .consult-btn {
+      background: linear-gradient(135deg, #7C3AED, #A855F7);
+      color: #FFFFFF;
+    }
+    
+    .disclaimer {
+      text-align: center;
+      padding: 15px;
+    }
+    
+    .disclaimer-text {
+      font-size: 12px;
+      color: #999999;
+    }
+    
+    /* 案例页面 */
+    .cases-header {
+      background: linear-gradient(135deg, #8B7355 0%, #A89078 100%);
+      padding: 25px 20px 30px;
+      text-align: center;
+    }
+    
+    .cases-header .header-title {
+      color: #FFFFFF;
+    }
+    
+    .cases-header .header-desc {
+      color: #FFFFFF;
+      opacity: 0.9;
+    }
+    
+    .cases-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 12px;
+    }
+    
+    .case-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 15px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+    
+    .case-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    
+    .case-avatar {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #D4A84B 0%, #E8C878 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #FFFFFF;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+    
+    .case-user {
+      flex: 1;
+    }
+    
+    .user-name {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 2px;
+    }
+    
+    .user-info {
+      display: block;
+      font-size: 12px;
+      color: #999999;
+    }
+    
+    .case-tag {
+      padding: 4px 10px;
+      background: #FFF9E6;
+      border-radius: 10px;
+      font-size: 11px;
+      color: #D4A84B;
+    }
+    
+    .case-content {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px 0;
+      border-top: 1px solid #F5F5F5;
+      border-bottom: 1px solid #F5F5F5;
+    }
+    
+    .case-problem, .case-solution, .case-result {
+      font-size: 13px;
+      color: #666666;
+      line-height: 1.6;
+    }
+    
+    .case-solution {
+      color: #4A7C59;
+    }
+    
+    .case-result {
+      color: #D4A84B;
+      font-weight: 500;
+    }
+    
+    .case-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+    
+    .case-date {
+      font-size: 12px;
+      color: #CCCCCC;
+    }
+    
+    .case-more {
+      font-size: 12px;
+      color: #7C3AED;
+    }
+    
+    .load-more, .no-more {
+      text-align: center;
+      padding: 15px;
+      color: #999999;
+      font-size: 13px;
+    }
+    
+    /* 关于页面 */
+    .about-header {
+      background: linear-gradient(135deg, #7C3AED 0%, #A855F7 100%);
+      padding: 30px 20px 40px;
+      text-align: center;
+    }
+    
+    .avatar-wrapper {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .author-name {
+      display: block;
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+    
+    .author-title {
+      display: block;
+      font-size: 14px;
+      color: #FFFFFF;
+      opacity: 0.9;
+      margin-bottom: 4px;
+    }
+    
+    .author-desc {
+      display: block;
+      font-size: 12px;
+      color: #FFFFFF;
+      opacity: 0.8;
+    }
+    
+    .intro-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .intro-text {
+      font-size: 14px;
+      color: #666666;
+      line-height: 1.8;
+    }
+    
+    .background-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .background-item {
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .bg-icon {
+      font-size: 18px;
+      margin-right: 8px;
+    }
+    
+    .bg-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 3px;
+    }
+    
+    .bg-desc {
+      display: block;
+      font-size: 12px;
+      color: #666666;
+      line-height: 1.5;
+    }
+    
+    .philosophy-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .philosophy-item {
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .philosophy-num {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #D4A84B 0%, #E8C878 100%);
+      border-radius: 50%;
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    
+    .philosophy-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 3px;
+    }
+    
+    .philosophy-desc {
+      display: block;
+      font-size: 12px;
+      color: #666666;
+      line-height: 1.5;
+    }
+    
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .contact-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background: #F8F8F8;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    
+    .contact-icon {
+      font-size: 20px;
+      margin-right: 8px;
+    }
+    
+    .contact-label {
+      display: block;
+      font-size: 12px;
+      color: #999999;
+      margin-bottom: 2px;
+    }
+    
+    .contact-value {
+      display: block;
+      font-size: 14px;
+      color: #1A1A1A;
+    }
+    
+    .contact-action {
+      font-size: 12px;
+      color: #D4A84B;
+      margin-left: auto;
+    }
+    
+    .copyright {
+      text-align: center;
+      padding: 20px 0;
+    }
+    
+    .copyright-text {
+      display: block;
+      font-size: 12px;
+      color: #CCCCCC;
+      margin-bottom: 4px;
+    }
+    
+    /* 服务详情页面 */
+    .service-header {
+      background: linear-gradient(135deg, #D4A84B 0%, #E8C878 100%);
+      padding: 25px 20px;
+      text-align: center;
+    }
+    
+    .service-title {
+      display: block;
+      font-size: 22px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+    
+    .service-subtitle {
+      display: block;
+      font-size: 14px;
+      color: #FFFFFF;
+      opacity: 0.9;
+    }
+    
+    .content-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .content-item {
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .content-icon {
+      color: #7C3AED;
+      font-weight: 600;
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    
+    .content-text {
+      font-size: 14px;
+      color: #666666;
+      line-height: 1.6;
+      flex: 1;
+    }
+    
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+    }
+    
+    .step-num {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #D4A84B 0%, #E8C878 100%);
+      border-radius: 50%;
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    
+    .step-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 2px;
+    }
+    
+    .step-desc {
+      display: block;
+      font-size: 12px;
+      color: #999999;
+    }
+    
+    .price-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #F5F5F5;
+    }
+    
+    .price-item:last-child {
+      border-bottom: none;
+    }
+    
+    .price-name {
+      font-size: 14px;
+      color: #666666;
+    }
+    
+    .price-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: #7C3AED;
+    }
+    
+    .primary-btn {
+      background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+      color: #5B21B6;
+      border-radius: 25px;
+      padding: 12px 30px;
+      font-size: 15px;
+      border: none;
+      box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    /* 预约页面 */
+    .booking-header {
+      background: linear-gradient(135deg, #D4A84B 0%, #E8C878 100%);
+      padding: 25px 20px;
+      text-align: center;
+    }
+    
+    .booking-header .header-title {
+      color: #FFFFFF;
+    }
+    
+    .booking-header .header-desc {
+      color: #FFFFFF;
+      opacity: 0.9;
+    }
+    
+    .form-item {
+      margin-bottom: 15px;
+    }
+    
+    .form-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .label-text {
+      font-size: 14px;
+      color: #1A1A1A;
+      font-weight: 500;
+    }
+    
+    .label-required {
+      color: #FF4D4F;
+      margin-left: 2px;
+    }
+    
+    .service-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .service-option {
+      padding: 8px 14px;
+      background: #F5F5F5;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #666666;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .service-option.active {
+      background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
+      color: #5B21B6;
+    }
+    
+    .form-input, .form-textarea {
+      width: 100%;
+      height: 44px;
+      background: #F8F8F8;
+      border-radius: 12px;
+      padding: 0 12px;
+      font-size: 14px;
+      border: none;
+      outline: none;
+      box-sizing: border-box;
+    }
+    
+    .form-textarea {
+      height: 80px;
+      padding: 12px;
+      resize: none;
+      font-family: inherit;
+    }
+    
+    .form-select {
+      width: 100%;
+      height: 44px;
+      background: #F8F8F8;
+      border-radius: 12px;
+      padding: 0 12px;
+      font-size: 14px;
+      border: none;
+      outline: none;
+      appearance: none;
+      cursor: pointer;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .tips {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 15px;
+      margin-top: 10px;
+    }
+    
+    .tips-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 8px;
+    }
+    
+    .tips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .tips-item {
+      font-size: 12px;
+      color: #666666;
+      line-height: 1.5;
+    }
+    
+    /* Toast提示 */
+    .toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.75);
+      color: #FFFFFF;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 9999;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- 首页 -->
+    <div class="page" :class="{ active: currentTab === 'index' }">
+      <!-- Banner -->
+      <div class="banner">
+        <div class="banner-content">
+          <div class="logo-icon"><img src="data:image/jpeg;base64,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" alt="Logo"></div>
+          <h1 class="banner-title">Talent Discovery</h1>
+          <p class="banner-slogan">激活天赋、还你自在</p>
+        </div>
+        <div class="banner-decoration"></div>
+      </div>
+
+      <div class="container">
+        <!-- 服务入口 -->
+        <div class="services-grid">
+          <div class="service-item" v-for="(item, index) in services" :key="index" @click="navigateToService(item)">
+            <div class="service-icon">{{ item.icon }}</div>
+            <span class="service-name">{{ item.name }}</span>
+            <span class="service-desc">{{ item.desc }}</span>
+          </div>
+        </div>
+
+        <!-- 快捷入口 -->
+        <div class="quick-entry">
+          <div class="section-title">快捷服务</div>
+          <div class="entry-list">
+            <div class="entry-item" @click="goToTest">
+              <div class="entry-icon">🔮</div>
+              <div class="entry-info">
+                <span class="entry-name">优势自测</span>
+                <span class="entry-tips">3分钟了解你的优势</span>
+              </div>
+              <span class="entry-arrow">›</span>
+            </div>
+            <div class="entry-item" @click="goToBooking">
+              <div class="entry-icon">📅</div>
+              <div class="entry-info">
+                <span class="entry-name">预约咨询</span>
+                <span class="entry-tips">一对一专业解读</span>
+              </div>
+              <span class="entry-arrow">›</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 关于优势 -->
+        <div class="advantages">
+          <div class="section-title">服务优势</div>
+          <div class="advantage-list">
+            <div class="advantage-item" v-for="(item, index) in advantages" :key="index">
+              <div class="advantage-icon">{{ item.icon }}</div>
+              <div class="advantage-text">
+                <span class="advantage-title">{{ item.title }}</span>
+                <span class="advantage-desc">{{ item.desc }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 自测页面 -->
+    <div class="page" :class="{ active: currentTab === 'test' }">
+      <!-- 选择测试类型 -->
+      <div v-if="testStep === 0">
+        <div class="test-header">
+          <div class="header-icon">🎯</div>
+          <span class="header-title">天赋综合定位系统</span>
+          <span class="header-desc">多维度测评，发现你的优势</span>
+        </div>
+        
+        <div class="container">
+          <div class="card test-selector">
+            <div class="selector-title">选择测评类型</div>
+            
+            <div class="test-type-card" @click="selectTest('mbti')">
+              <div class="type-icon">🦊</div>
+              <div class="type-info">
+                <span class="type-name">MBTI动物人格测试</span>
+                <span class="type-desc">12题 · 3分钟 · 16种动物人格</span>
+              </div>
+              <span class="type-arrow">›</span>
+            </div>
+            
+            <div class="test-type-card" @click="selectTest('mi')">
+              <div class="type-icon">🧠</div>
+              <div class="type-info">
+                <span class="type-name">哈佛多元智能测评</span>
+                <span class="type-desc">9题 · 3分钟 · 9种智能类型</span>
+              </div>
+              <span class="type-arrow">›</span>
+            </div>
+          </div>
+          
+          <div class="card tips-card">
+            <div class="tips-title">💡 测试须知</div>
+            <div class="tips-list">
+              <span class="tips-item">• 请在安静环境下作答</span>
+              <span class="tips-item">• 选择最符合你的选项</span>
+              <span class="tips-item">• 结果仅供参考，不构成专业建议</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 答题中 -->
+      <div v-else-if="testStep === 1">
+        <div class="question-header">
+          <div class="progress-bar">
+            <div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
+          </div>
+          <span class="progress-text">{{ currentIndex + 1 }} / {{ questions.length }}</span>
+        </div>
+        
+        <div class="question-container">
+          <span class="question-text">{{ currentQuestion.text }}</span>
+          
+          <div class="options-list">
+            <div 
+              class="option-item" 
+              v-for="(option, index) in currentQuestion.options" 
+              :key="index"
+              :class="{ 'selected': selectedOption === index }"
+              @click="selectOption(index)"
+            >
+              <span class="option-letter">{{ ['A', 'B', 'C'][index] }}</span>
+              <span class="option-text">{{ option.text }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="question-actions">
+          <button 
+            class="action-btn prev-btn" 
+            v-if="currentIndex > 0"
+            @click="prevQuestion"
+          >上一题</button>
+          <button 
+            class="action-btn next-btn" 
+            :disabled="selectedOption === null"
+            @click="nextQuestion"
+          >{{ currentIndex === questions.length - 1 ? '查看结果' : '下一题' }}</button>
+        </div>
+      </div>
+      
+      <!-- 测试结果 -->
+      <div v-else-if="testStep === 2">
+        <div class="result-header">
+          <span class="result-icon">{{ resultData.icon }}</span>
+          <span class="result-type">{{ resultData.type }}</span>
+          <span class="result-name">{{ resultData.name }}</span>
+        </div>
+        
+        <div class="container">
+          <div class="card">
+            <span class="result-desc">{{ resultData.description }}</span>
+          </div>
+          
+          <div class="card" v-if="resultData.keywords">
+            <div class="card-title">核心优势</div>
+            <span class="keywords-text">{{ resultData.keywords }}</span>
+            <span class="strength-text">{{ resultData.strength }}</span>
+          </div>
+          
+          <div class="card" v-if="resultData.careers">
+            <div class="card-title">适合领域</div>
+            <span class="careers-text">{{ resultData.careers }}</span>
+          </div>
+          
+          <div class="card" v-if="topIntelligences.length > 0">
+            <div class="card-title">你的智能优势</div>
+            <div class="intelligence-list">
+              <div class="intelligence-item" v-for="(item, index) in topIntelligences" :key="index">
+                <span class="intel-icon">{{ item.icon }}</span>
+                <div class="intel-info">
+                  <span class="intel-name">{{ item.name }}</span>
+                  <div class="intel-bar">
+                    <div class="intel-fill" :style="{ width: item.percent + '%' }"></div>
+                  </div>
+                </div>
+                <span class="intel-score">{{ item.score }}分</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="result-actions">
+            <button class="action-btn retry-btn" @click="restartTest">重新测试</button>
+            <button class="action-btn consult-btn" @click="goToBookingFromTest">预约咨询</button>
+          </div>
+          
+          <div class="disclaimer">
+            <span class="disclaimer-text">⚠️ 测试结果仅供参考，不构成专业建议</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 案例页面 -->
+    <div class="page" :class="{ active: currentTab === 'cases' }">
+      <div class="cases-header">
+        <h2 class="header-title">成功案例</h2>
+        <p class="header-desc">真实故事，帮你了解服务价值</p>
+      </div>
+
+      <div class="container">
+        <div class="cases-list">
+          <div class="case-card" v-for="(item, index) in cases" :key="index" @click="viewCaseDetail(item)">
+            <div class="case-header">
+              <div class="case-avatar">{{ item.avatar }}</div>
+              <div class="case-user">
+                <span class="user-name">{{ item.name }}</span>
+                <span class="user-info">{{ item.gender }} · {{ item.age }}岁</span>
+              </div>
+              <div class="case-tag">{{ item.serviceType }}</div>
+            </div>
+            
+            <div class="case-content">
+              <span class="case-problem">问题：{{ item.problem }}</span>
+              <span class="case-solution">方案：{{ item.solution }}</span>
+              <span class="case-result">结果：{{ item.result }}</span>
+            </div>
+            
+            <div class="case-footer">
+              <span class="case-date">{{ item.date }}</span>
+              <span class="case-more">查看详情 ›</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="no-more">
+          <span>没有更多了</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 我的页面 -->
+    <div class="page" :class="{ active: currentTab === 'about' }">
+      <div class="about-header">
+        <div class="avatar-wrapper">
+          <div class="logo-icon"><img src="data:image/jpeg;base64,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" alt="Logo"></div>
+        </div>
+        <h2 class="author-name">天赋自在</h2>
+        <p class="author-title">激活天赋、还你自在</p>
+        <p class="author-desc">优势分析定位系统 · 专业咨询师</p>
+      </div>
+
+      <div class="container">
+        <!-- 个人介绍 -->
+        <div class="card">
+          <div class="card-title">关于我</div>
+          <div class="intro-content">
+            <span class="intro-text">您好，我是天赋自在的咨询师。</span>
+            <span class="intro-text">综合运用国际权威测评工具与传统智慧工具的现代应用，包括MBTI、哈佛多元智能、斯坦福人生设计等科学方法。</span>
+            <span class="intro-text">用专业工具分析性格优势，系统思维规划发展路径，助力构建自在之人生。</span>
+            <span class="intro-text">核心理念：激活天赋、还你自在。</span>
+          </div>
+        </div>
+
+        <!-- 专业背景 -->
+        <div class="card">
+          <div class="card-title">专业背景</div>
+          <div class="background-list">
+            <div class="background-item" v-for="(item, index) in backgrounds" :key="index">
+              <span class="bg-icon">{{ item.icon }}</span>
+              <div class="bg-content">
+                <span class="bg-title">{{ item.title }}</span>
+                <span class="bg-desc">{{ item.desc }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 服务理念 -->
+        <div class="card">
+          <div class="card-title">服务理念</div>
+          <div class="philosophy-list">
+            <div class="philosophy-item" v-for="(item, index) in philosophies" :key="index">
+              <div class="philosophy-num">{{ index + 1 }}</div>
+              <div class="philosophy-text">
+                <span class="philosophy-title">{{ item.title }}</span>
+                <span class="philosophy-desc">{{ item.desc }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 联系方式 -->
+        <div class="card">
+          <div class="card-title">联系方式</div>
+          <div class="contact-list">
+            <div class="contact-item" @click="copyWechat">
+              <span class="contact-icon">💬</span>
+              <div class="contact-info">
+                <span class="contact-label">微信咨询</span>
+                <span class="contact-value">{{ wechat }}</span>
+              </div>
+              <span class="contact-action">点击复制</span>
+            </div>
+            <div class="contact-item" @click="makeCall">
+              <span class="contact-icon">📞</span>
+              <div class="contact-info">
+                <span class="contact-label">电话咨询</span>
+                <span class="contact-value">{{ phone }}</span>
+              </div>
+              <span class="contact-action">点击拨打</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 底部版权 -->
+        <div class="copyright">
+          <span class="copyright-text">© 2024 天赋自在</span>
+          <span class="copyright-text">激活天赋、还你自在</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 服务详情页面 -->
+    <div class="page" :class="{ active: currentTab === 'service' }">
+      <div class="service-header">
+        <h2 class="service-title">{{ serviceTitle }}</h2>
+        <p class="service-subtitle">{{ serviceSubtitle }}</p>
+      </div>
+
+      <div class="container">
+        <!-- 服务介绍 -->
+        <div class="card">
+          <div class="card-title">服务介绍</div>
+          <span class="result-desc">{{ serviceDesc }}</span>
+        </div>
+
+        <!-- 服务内容 -->
+        <div class="card">
+          <div class="card-title">服务内容</div>
+          <div class="content-list">
+            <div class="content-item" v-for="(item, index) in contentList" :key="index">
+              <span class="content-icon">✓</span>
+              <span class="content-text">{{ item }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 服务流程 -->
+        <div class="card">
+          <div class="card-title">服务流程</div>
+          <div class="flow-steps">
+            <div class="flow-step" v-for="(step, index) in flowSteps" :key="index">
+              <div class="step-num">{{ index + 1 }}</div>
+              <div class="step-info">
+                <span class="step-title">{{ step.title }}</span>
+                <span class="step-desc">{{ step.desc }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 价格说明 -->
+        <div class="card">
+          <div class="card-title">价格说明</div>
+          <div class="price-item" v-for="(item, index) in priceList" :key="index">
+            <span class="price-name">{{ item.name }}</span>
+            <span class="price-value">¥{{ item.price }}</span>
+          </div>
+        </div>
+
+        <!-- 预约按钮 -->
+        <button class="primary-btn" @click="goToBookingFromService">立即预约</button>
+      </div>
+    </div>
+
+    <!-- 预约咨询页面 -->
+    <div class="page" :class="{ active: currentTab === 'booking' }">
+      <div class="booking-header">
+        <h2 class="header-title">预约咨询</h2>
+        <p class="header-desc">填写信息，专业老师将尽快联系您</p>
+      </div>
+
+      <div class="container">
+        <!-- 预约表单 -->
+        <div class="card">
+          <!-- 服务类型 -->
+          <div class="form-item">
+            <div class="form-label">
+              <span class="label-text">服务类型</span>
+              <span class="label-required">*</span>
+            </div>
+            <div class="service-selector">
+              <span 
+                class="service-option" 
+                :class="{ active: bookingForm.serviceType === item.value }"
+                v-for="(item, index) in bookingServiceTypes" 
+                :key="index"
+                @click="selectBookingService(item.value)"
+              >
+                {{ item.label }}
+              </span>
+            </div>
+          </div>
+
+          <!-- 姓名 -->
+          <div class="form-item">
+            <div class="form-label">
+              <span class="label-text">您的姓名</span>
+              <span class="label-required">*</span>
+            </div>
+            <input 
+              class="form-input" 
+              type="text" 
+              v-model="bookingForm.name" 
+              placeholder="请输入姓名"
+            />
+          </div>
+
+          <!-- 手机号 -->
+          <div class="form-item">
+            <div class="form-label">
+              <span class="label-text">手机号码</span>
+              <span class="label-required">*</span>
+            </div>
+            <input 
+              class="form-input" 
+              type="tel" 
+              v-model="bookingForm.phone" 
+              placeholder="请输入手机号"
+              maxlength="11"
+            />
+          </div>
+
+          <!-- 出生日期 -->
+          <div class="form-item">
+            <div class="form-label">
+              <span class="label-text">出生日期</span>
+              <span class="label-required">*</span>
+            </div>
+            <input 
+              class="form-input" 
+              type="date" 
+              v-model="bookingForm.birthDate"
+            />
+          </div>
+
+          <!-- 出生时辰 -->
+          <div class="form-item">
+            <div class="form-label">
+              <span class="label-text">出生时辰</span>
+              <span class="label-required">*</span>
+            </div>
+            <select class="form-select" v-model="bookingForm.birthHour">
+              <option value="">请选择出生时辰</option>
+              <option v-for="(hour, index) in birthHours" :key="index" :value="hour.value">{{ hour.label }}</option>
+            </select>
+          </div>
+
+          <!-- 咨询目的 -->
+          <div class="form-item">
+            <div class="form-label">
+              <span class="label-text">咨询目的</span>
+            </div>
+            <textarea 
+              class="form-textarea" 
+              v-model="bookingForm.purpose" 
+              placeholder="请简要描述您的咨询目的（选填，最多200字）"
+              maxlength="200"
+            ></textarea>
+          </div>
+
+          <!-- 期望预约时间 -->
+          <div class="form-item">
+            <div class="form-label">
+              <span class="label-text">期望预约时间</span>
+            </div>
+            <input 
+              class="form-input" 
+              type="date" 
+              v-model="bookingForm.preferDate"
+            />
+          </div>
+        </div>
+
+        <!-- 提交按钮 -->
+        <button class="primary-btn submit-btn" @click="submitBooking" :disabled="bookingSubmitting">
+          {{ bookingSubmitting ? '提交中...' : '提交预约' }}
+        </button>
+
+        <!-- 温馨提示 -->
+        <div class="tips">
+          <div class="tips-title">温馨提示</div>
+          <div class="tips-list">
+            <span class="tips-item">• 我们会在24小时内与您联系，请保持手机畅通</span>
+            <span class="tips-item">• 预约成功后会有短信提醒</span>
+            <span class="tips-item">• 如需调整时间，请提前告知我们</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TabBar -->
+    <div class="tabbar">
+      <div class="tab-item" :class="{ active: currentTab === 'index' }" @click="switchTab('index')">
+        <span class="tab-icon">🏠</span>
+        <span class="tab-text">首页</span>
+      </div>
+      <div class="tab-item" :class="{ active: currentTab === 'test' }" @click="switchTab('test')">
+        <span class="tab-icon">🔮</span>
+        <span class="tab-text">自测</span>
+      </div>
+      <div class="tab-item" :class="{ active: currentTab === 'cases' }" @click="switchTab('cases')">
+        <span class="tab-icon">📖</span>
+        <span class="tab-text">案例</span>
+      </div>
+      <div class="tab-item" :class="{ active: currentTab === 'about' }" @click="switchTab('about')">
+        <span class="tab-icon">👤</span>
+        <span class="tab-text">我的</span>
+      </div>
+    </div>
+
+    <!-- Toast提示 -->
+    <div class="toast" v-if="toastShow">{{ toastText }}</div>
+  </div>
+
+  <script>
+    const { createApp, ref, computed, reactive } = Vue
+
+    createApp({
+      setup() {
+        // 当前标签页
+        const currentTab = ref('index')
+        
+        // Toast
+        const toastShow = ref(false)
+        const toastText = ref('')
+        
+        const showToast = (text) => {
+          toastText.value = text
+          toastShow.value = true
+          setTimeout(() => {
+            toastShow.value = false
+          }, 2000)
+        }
+        
+        // 首页数据
+        const services = [
+          { icon: '🎯', name: '优势分析', desc: '发现独特优势', type: 'talent' },
+          { icon: '🧭', name: '人生规划', desc: '指引前行方向', type: 'decision' },
+          { icon: '📊', name: '战略决策', desc: '布局未来发展', type: 'strategy' },
+          { icon: '⏰', name: '关键节点规划', desc: '把握关键时机', type: 'timing' }
+        ]
+        
+        const advantages = [
+          { icon: '🔬', title: '科学融合', desc: '国际权威测评+传统智慧工具' },
+          { icon: '🧰', title: '多维工具', desc: 'MBTI/多元智能/斯坦福人生设计' },
+          { icon: '🎯', title: '系统思维', desc: '全面认识优势，科学规划发展' },
+          { icon: '✨', title: '自在人生', desc: '激活天赋、还你自在' }
+        ]
+        
+        // 导航方法
+        const navigateToService = (item) => {
+          initServiceData(item.type)
+          currentTab.value = 'service'
+        }
+        
+        const goToTest = () => {
+          testStep.value = 0
+          currentTab.value = 'test'
+        }
+        
+        const goToBooking = () => {
+          currentTab.value = 'booking'
+        }
+        
+        const switchTab = (tab) => {
+          currentTab.value = tab
+          if (tab !== 'test') {
+            testStep.value = 0
+          }
+        }
+        
+        // 服务详情数据
+        const serviceTitle = ref('')
+        const serviceSubtitle = ref('')
+        const serviceDesc = ref('')
+        const contentList = ref([])
+        const flowSteps = ref([])
+        const priceList = ref([])
+        
+        const serviceData = {
+          talent: {
+            title: '优势分析',
+            subtitle: '发现你的独特优势',
+            desc: '综合运用MBTI、哈佛多元智能、斯坦福人生设计等国际权威工具，多维度分析你的性格特质和潜在优势。',
+            content: [
+              'MBTI人格类型分析',
+              '哈佛多元智能测评',
+              '核心优势定位',
+              '发展领域建议',
+              '成长路径规划'
+            ],
+            steps: [
+              { title: '多维测评', desc: '国际权威测评工具' },
+              { title: '综合分析', desc: '专业老师解读' },
+              { title: '报告生成', desc: '出具详细报告' },
+              { title: '答疑指导', desc: '一对一沟通' }
+            ],
+            prices: [
+              { name: '基础版', price: '299' },
+              { name: '深入版', price: '599' },
+              { name: '全面版', price: '999' }
+            ]
+          },
+          decision: {
+            title: '人生规划',
+            subtitle: '指引你的人生方向',
+            desc: '结合斯坦福人生设计与传统智慧工具的现代应用，为你的人生重大决策提供系统化分析和方向指引。',
+            content: [
+              '人生设计框架分析',
+              '决策时机评估',
+              '风险收益分析',
+              '多方案对比',
+              '行动路径规划'
+            ],
+            steps: [
+              { title: '需求沟通', desc: '了解决策困惑' },
+              { title: '多维分析', desc: '综合工具评估' },
+              { title: '方案制定', desc: '提供决策建议' },
+              { title: '跟踪指导', desc: '后续调整支持' }
+            ],
+            prices: [
+              { name: '单次咨询', price: '399' },
+              { name: '深度分析', price: '799' },
+              { name: '全程指导', price: '1599' }
+            ]
+          },
+          strategy: {
+            title: '战略决策',
+            subtitle: '布局你的未来发展',
+            desc: '运用系统思维和多维分析工具，帮你制定人生战略规划，在关键节点做出正确选择。',
+            content: [
+              '现状全面评估',
+              '目标体系构建',
+              '资源配置优化',
+              '时间线规划',
+              '风险管理策略'
+            ],
+            steps: [
+              { title: '现状分析', desc: '全面评估当前状态' },
+              { title: '目标设定', desc: '明确发展方向' },
+              { title: '方案设计', desc: '制定战略路径' },
+              { title: '落地执行', desc: '跟踪调整优化' }
+            ],
+            prices: [
+              { name: '基础规划', price: '599' },
+              { name: '全面规划', price: '999' },
+              { name: '深度陪跑', price: '1999' }
+            ]
+          },
+          timing: {
+            title: '关键节点规划',
+            subtitle: '把握人生关键节点',
+            desc: '运用传统智慧工具与现代分析方法，帮你识别人生关键时机，在正确的时间做正确的事。',
+            content: [
+              '人生阶段特征分析',
+              '关键发展节点',
+              '决策风险评估',
+              '行动规划建议',
+              '关注要点提醒'
+            ],
+            steps: [
+              { title: '信息确认', desc: '核对出生信息' },
+              { title: '阶段分析', desc: '传统工具现代应用' },
+              { title: '节点定位', desc: '关键发展节点' },
+              { title: '行动建议', desc: '具体指导方案' }
+            ],
+            prices: [
+              { name: '时机分析', price: '399' },
+              { name: '年度规划', price: '799' },
+              { name: '长期追踪', price: '1499' }
+            ]
+          }
+        }
+        
+        const initServiceData = (type) => {
+          const data = serviceData[type] || serviceData.talent
+          serviceTitle.value = data.title
+          serviceSubtitle.value = data.subtitle
+          serviceDesc.value = data.desc
+          contentList.value = data.content
+          flowSteps.value = data.steps
+          priceList.value = data.prices
+        }
+        
+        const goToBookingFromService = () => {
+          currentTab.value = 'booking'
+        }
+        
+        // 测试数据
+        const MBTI_DATA = {
+          questions: [
+            { id: 1, text: "周末你更想怎么度过？", options: [
+              { text: "和朋友聚会、出门游玩", score: { E: 1, I: 0 } },
+              { text: "宅家看书、看剧，独处放松", score: { E: 0, I: 1 } }
+            ]},
+            { id: 2, text: "你做决定时更依赖？", options: [
+              { text: "直觉和灵感", score: { S: 0, N: 1 } },
+              { text: "事实和经验", score: { S: 1, N: 0 } }
+            ]},
+            { id: 3, text: "遇到矛盾时，你通常？", options: [
+              { text: "理性分析，就事论事", score: { T: 1, F: 0 } },
+              { text: "考虑感受，注重和谐", score: { T: 0, F: 1 } }
+            ]},
+            { id: 4, text: "对于旅行计划，你更倾向于？", options: [
+              { text: "提前做好详细规划", score: { J: 1, P: 0 } },
+              { text: "随机应变，走一步看一步", score: { J: 0, P: 1 } }
+            ]},
+            { id: 5, text: "学习新技能时，你喜欢？", options: [
+              { text: "快速掌握核心，不拘小节", score: { S: 0, N: 1 } },
+              { text: "循序渐进，注重细节", score: { S: 1, N: 0 } }
+            ]},
+            { id: 6, text: "在团队中，你更像？", options: [
+              { text: "主动发言，带动气氛", score: { E: 1, I: 0 } },
+              { text: "默默倾听，思考后再表达", score: { E: 0, I: 1 } }
+            ]},
+            { id: 7, text: "你更在意？", options: [
+              { text: "规则和公平", score: { T: 1, F: 0 } },
+              { text: "人情和包容", score: { T: 0, F: 1 } }
+            ]},
+            { id: 8, text: "面对截止日期，你通常？", options: [
+              { text: "提前完成，避免赶工", score: { J: 1, P: 0 } },
+              { text: "最后冲刺，效率更高", score: { J: 0, P: 1 } }
+            ]},
+            { id: 9, text: "你对未来的态度是？", options: [
+              { text: "畅想各种可能性", score: { S: 0, N: 1 } },
+              { text: "关注当下，脚踏实地", score: { S: 1, N: 0 } }
+            ]},
+            { id: 10, text: "社交后你感觉？", options: [
+              { text: "精力充沛，充满活力", score: { E: 1, I: 0 } },
+              { text: "需要独处恢复精力", score: { E: 0, I: 1 } }
+            ]},
+            { id: 11, text: "评价他人时，你更看重？", options: [
+              { text: "能力和结果", score: { T: 1, F: 0 } },
+              { text: "动机和感受", score: { T: 0, F: 1 } }
+            ]},
+            { id: 12, text: "生活方式上，你更偏爱？", options: [
+              { text: "有规律、有秩序", score: { J: 1, P: 0 } },
+              { text: "自由、灵活", score: { J: 0, P: 1 } }
+            ]}
+          ],
+          animalMap: {
+            'INTJ': { animal: '猫头鹰', icon: '🦉', description: '你是睿智的猫头鹰型人格（INTJ）。你独立、理性、富有远见，喜欢深度思考，不盲从大众。你有强烈的逻辑思维和规划能力，擅长解决复杂问题，是天生的战略家。', keywords: '远见、逻辑、独立、革新', strength: '战略规划与系统构建', careers: '科学家、工程师、企业顾问、政策研究员、架构师' },
+            'INFJ': { animal: '鹿', icon: '🦌', description: '你是温柔的鹿型人格（INFJ）。你富有同理心、洞察力强，善于理解他人的内心需求。你追求精神层面的满足，有强烈的理想主义，是默默温暖他人的治愈者。', keywords: '洞察、共情、愿景、整合', strength: '洞察启迪与精神整合', careers: '心理咨询师、作家、NGO组织者、战略规划师、导师' },
+            'INTP': { animal: '狐狸', icon: '🦊', description: '你是机敏的狐狸型人格（INTP）。你好奇心旺盛，思维敏捷，喜欢探索各种新奇的想法和理论。你讨厌墨守成规，擅长从不同角度分析问题。', keywords: '逻辑、好奇、抽象、独立', strength: '逻辑解构与概念创新', careers: '数学家、哲学家、程序员、理论物理学家、分析师' },
+            'INFP': { animal: '兔子', icon: '🐇', description: '你是柔软的兔子型人格（INFP）。你内心丰富、敏感细腻，有强烈的个人价值观。你热爱美好事物，富有创造力，是天生的理想主义者。', keywords: '理想、真诚、创意、疗愈', strength: '价值共鸣与意义创造', careers: '作家、诗人、心理咨询师、社会工作者、编辑' },
+            'ENTJ': { animal: '狮子', icon: '🦁', description: '你是霸气的狮子型人格（ENTJ）。你自信、果断、有领导力，目标感极强，擅长统筹规划和指挥团队。你不畏惧挑战，是天生的领导者。', keywords: '战略、决断、掌控、革新', strength: '战略领导与宏观掌控', careers: 'CEO、将军、投资银行家、政策制定者、企业管理顾问' },
+            'ENFJ': { animal: '海豚', icon: '🐬', description: '你是温暖的海豚型人格（ENFJ）。你热情、善于沟通，有强烈的责任感和感染力。你擅长理解和激励他人，是团队中的粘合剂和精神领袖。', keywords: '感召、赋能、洞察、引领', strength: '感召领导与培养他人', careers: '教师、教练、政治家、公关总监、非营利组织领导' },
+            'ENTP': { animal: '猴子', icon: '🐒', description: '你是活泼的猴子型人格（ENTP）。你思维跳脱、口才出众，喜欢辩论和挑战常规。你适应能力极强，是团队中的气氛制造者和创意源泉。', keywords: '思辨、挑战、创新、幽默', strength: '概念辩论与可能性探索', careers: '律师、企业家、专栏作家、产品经理、脱口秀演员' },
+            'ENFP': { animal: '松鼠', icon: '🐿️', description: '你是开朗的松鼠型人格（ENFP）。你热情、乐观、充满活力，对生活充满好奇。你善于发现生活中的美好，是天生的社交小太阳。', keywords: '创意、激励、联结、愿景', strength: '连接灵感与激励人心', careers: '培训师、营销策划、自媒体人、非营利组织发起人' },
+            'ISFJ': { animal: '牧羊犬', icon: '🐕', description: '你是忠诚的牧羊犬型人格（ISFJ）。你踏实、细心、有责任感，善于照顾他人的需求。你注重细节，信守承诺，是身边人最可靠的后盾。', keywords: '关怀、体贴、守护、传统', strength: '关怀服务与细节守护', careers: '护士、教师、社工、人力资源、家庭顾问' },
+            'ISFP': { animal: '猫', icon: '🐱', description: '你是随性的猫型人格（ISFP）。你热爱自由、注重当下，有敏锐的审美和感知力。你不喜欢被束缚，有自己独特的生活节奏和态度。', keywords: '审美、共情、灵活、体验', strength: '审美体验与灵活创作', careers: '设计师、音乐家、园艺师、宠物护理、自由艺术家' },
+            'ISTJ': { animal: '熊', icon: '🐻', description: '你是稳重的熊型人格（ISTJ）。你踏实、可靠、遵守规则，喜欢按部就班地做事。你有强烈的责任感，是让人安心的存在。', keywords: '严谨、条理、责任、务实', strength: '细节执行与体系维护', careers: '会计师、审计师、项目经理、行政主管、质量控制' },
+            'ISTP': { animal: '狼', icon: '🐺', description: '你是冷静的狼型人格（ISTP）。你务实、冷静、动手能力强，擅长解决实际问题。你不喜欢空谈，能在危机中保持理性。', keywords: '动手、应变、精准、务实', strength: '工具操作与实效分析', careers: '机械师、飞行员、程序员、急救员、手艺人' },
+            'ESFJ': { animal: '蜜蜂', icon: '🐝', description: '你是勤劳的蜜蜂型人格（ESFJ）。你热情、友善、善于社交，注重人际关系的和谐。你乐于为集体付出，是团队中不可或缺的实干家。', keywords: '关怀、协调、传统、务实', strength: '和谐组织与支持协作', careers: '教师、护士、社区工作者、客户关系经理、婚礼策划' },
+            'ESFP': { animal: '鹦鹉', icon: '🦜', description: '你是活泼的鹦鹉型人格（ESFP）。你外向、乐观、热爱生活，喜欢成为人群的焦点。你善于表达和表演，是天生的享乐主义者。', keywords: '热情、活力、亲和、体验', strength: '氛围营造与即兴互动', careers: '演员、主持人、导游、公关、健身教练' },
+            'ESTJ': { animal: '马', icon: '🐴', description: '你是果敢的马型人格（ESTJ）。你果断、务实、有执行力，喜欢明确的规则和目标。你擅长管理和组织，是能带领团队高效完成任务的实干派。', keywords: '组织、效率、责任、掌控', strength: '组织管理与高效执行', careers: '军官、CEO、项目经理、行政总监、运营经理' },
+            'ESTP': { animal: '豹子', icon: '🐆', description: '你是敏捷的豹子型人格（ESTP）。你勇敢、果断、喜欢冒险，擅长把握当下的机会。你适应能力极强，是天生的行动派。', keywords: '行动、敏锐、社交、应变', strength: '即时应对与资源调动', careers: '销售、创业者、运动员、经纪人、活动策划' }
+          }
+        }
+        
+        const MI_DATA = {
+          questions: [
+            { id: 1, text: "我喜欢阅读、写作，或者讲故事给别人听", intelligence: "语言智能", options: [
+              { text: "非常符合", score: 3 },
+              { text: "有点符合", score: 2 },
+              { text: "不太符合", score: 1 }
+            ]},
+            { id: 2, text: "我喜欢解谜、数独或逻辑推理类游戏", intelligence: "逻辑-数学智能", options: [
+              { text: "非常符合", score: 3 },
+              { text: "有点符合", score: 2 },
+              { text: "不太符合", score: 1 }
+            ]},
+            { id: 3, text: "我经常不自觉地哼歌，对音调变化很敏感", intelligence: "音乐智能", options: [
+              { text: "非常符合", score: 3 },
+              { text: "有点符合", score: 2 },
+              { text: "不太符合", score: 1 }
+            ]},
+            { id: 4, text: "我擅长运动或手工，身体协调性很好", intelligence: "身体-运动智能", options: [
+              { text: "非常符合", score: 3 },
+              { text: "有点符合", score: 2 },
+              { text: "不太符合", score: 1 }
+            ]},
+            { id: 5, text: "我能轻松看懂地图，脑海中容易形成空间画面", intelligence: "空间智能", options: [
+              { text: "非常符合", score: 3 },
+              { text: "有点符合", score: 2 },
+              { text: "不太符合", score: 1 }
+            ]},
+            { id: 6, text: "我热爱大自然，喜欢观察动植物或户外活动", intelligence: "自然探索智能", options: [
+              { text: "非常符合", score: 3 },
+              { text: "有点符合", score: 2 },
+              { text: "不太符合", score: 1 }
+            ]},
+            { id: 7, text: "我善于理解他人感受，朋友常向我倾诉", intelligence: "人际智能", options: [
+              { text: "非常符合", score: 3 },
+              { text: "有点符合", score: 2 },
+              { text: "不太符合", score: 1 }
+            ]},
+            { id: 8, text: "我经常反思自己的情绪和行为，了解自己的内心", intelligence: "内省智能", options: [
+              { text: "非常符合", score: 3 },
+              { text: "有点符合", score: 2 },
+              { text: "不太符合", score: 1 }
+            ]},
+            { id: 9, text: "我常思考\"人生的意义是什么\"这类深层问题", intelligence: "存在智能", options: [
+              { text: "非常符合", score: 3 },
+              { text: "有点符合", score: 2 },
+              { text: "不太符合", score: 1 }
+            ]}
+          ],
+          intelligenceTypes: {
+            '语言智能': { icon: '🗣️', talent: '对语言文字高度敏感，善于表达、写作、讲故事', careers: '作家、记者、律师、演讲家、教师' },
+            '逻辑-数学智能': { icon: '🔢', talent: '抽象推理、逻辑分析、数字运算、发现规律', careers: '数学家、科学家、程序员、工程师、哲学家' },
+            '音乐智能': { icon: '🎵', talent: '对音调、节奏、旋律极度敏感，能创作与演奏', careers: '音乐家、作曲家、指挥家、音效师、歌手' },
+            '身体-运动智能': { icon: '🤸', talent: '精准控制身体动作，手眼协调能力强', careers: '运动员、舞蹈家、外科医生、工匠、演员' },
+            '空间智能': { icon: '🗺️', talent: '三维空间感知、视觉化思维、方向感强', careers: '建筑师、画家、飞行员、设计师、棋手' },
+            '自然探索智能': { icon: '🌿', talent: '识别、分类自然界事物，对生态环境高度敏感', careers: '生物学家、农学家、厨师、地质学家、环保人士' },
+            '人际智能': { icon: '🤝', talent: '理解他人情绪、动机，善于沟通与协作', careers: '领导者、教师、心理咨询师、销售、政治家' },
+            '内省智能': { icon: '🪞', talent: '深度自我认知，了解自身情绪、动机与目标', careers: '哲学家、心理学家、作家、企业家' },
+            '存在智能': { icon: '❓', talent: '思考生命意义、宇宙本质等终极问题', careers: '哲学家、神学家、思想家' }
+          }
+        }
+        
+        // 测试状态
+        const testStep = ref(0)
+        const testType = ref('')
+        const questions = ref([])
+        const currentIndex = ref(0)
+        const selectedOption = ref(null)
+        const answers = ref([])
+        const mbtiScores = reactive({ E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 })
+        const miScores = reactive({})
+        const resultData = ref({})
+        const topIntelligences = ref([])
+        
+        const currentQuestion = computed(() => questions.value[currentIndex.value] || {})
+        const progressPercent = computed(() => ((currentIndex.value + 1) / questions.value.length) * 100)
+        
+        const selectTest = (type) => {
+          testType.value = type
+          testStep.value = 1
+          currentIndex.value = 0
+          selectedOption.value = null
+          answers.value = []
+          
+          if (type === 'mbti') {
+            questions.value = MBTI_DATA.questions
+            Object.keys(mbtiScores).forEach(key => mbtiScores[key] = 0)
+          } else {
+            questions.value = MI_DATA.questions
+            Object.keys(miScores).forEach(key => delete miScores[key])
+          }
+        }
+        
+        const selectOption = (index) => {
+          selectedOption.value = index
+        }
+        
+        const prevQuestion = () => {
+          if (currentIndex.value > 0) {
+            currentIndex.value--
+            selectedOption.value = answers.value[currentIndex.value] !== undefined ? answers.value[currentIndex.value] : null
+          }
+        }
+        
+        const nextQuestion = () => {
+          if (selectedOption.value === null) return
+          
+          answers.value[currentIndex.value] = selectedOption.value
+          
+          const option = currentQuestion.value.options[selectedOption.value]
+          if (testType.value === 'mbti') {
+            Object.keys(option.score).forEach(key => {
+              mbtiScores[key] += option.score[key]
+            })
+          } else {
+            const intel = currentQuestion.value.intelligence
+            if (!miScores[intel]) miScores[intel] = 0
+            miScores[intel] += option.score
+          }
+          
+          if (currentIndex.value < questions.value.length - 1) {
+            currentIndex.value++
+            selectedOption.value = answers.value[currentIndex.value] !== undefined ? answers.value[currentIndex.value] : null
+          } else {
+            showResult()
+          }
+        }
+        
+        const showResult = () => {
+          testStep.value = 2
+          
+          if (testType.value === 'mbti') {
+            const mbti = 
+              (mbtiScores.E >= mbtiScores.I ? 'E' : 'I') +
+              (mbtiScores.S >= mbtiScores.N ? 'S' : 'N') +
+              (mbtiScores.T >= mbtiScores.F ? 'T' : 'F') +
+              (mbtiScores.J >= mbtiScores.P ? 'J' : 'P')
+            
+            const animalData = MBTI_DATA.animalMap[mbti]
+            resultData.value = {
+              type: mbti,
+              name: animalData.animal,
+              icon: animalData.icon,
+              description: animalData.description,
+              keywords: animalData.keywords,
+              strength: animalData.strength,
+              careers: animalData.careers
+            }
+            topIntelligences.value = []
+          } else {
+            const sorted = Object.entries(miScores)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 3)
+            
+            const top = sorted[0]
+            const topData = MI_DATA.intelligenceTypes[top[0]]
+            
+            resultData.value = {
+              type: '多元智能',
+              name: top[0],
+              icon: topData.icon,
+              description: `你的主导智能是${top[0]}。${topData.talent}。适合的职业方向包括：${topData.careers}。`
+            }
+            
+            topIntelligences.value = sorted.map(([name, score]) => ({
+              name,
+              icon: MI_DATA.intelligenceTypes[name].icon,
+              score,
+              percent: Math.round((score / 9) * 100)
+            }))
+          }
+        }
+        
+        const restartTest = () => {
+          testStep.value = 0
+          testType.value = ''
+          questions.value = []
+          currentIndex.value = 0
+          selectedOption.value = null
+          answers.value = []
+          resultData.value = {}
+          topIntelligences.value = []
+        }
+        
+        const goToBookingFromTest = () => {
+          currentTab.value = 'booking'
+        }
+        
+        // 案例数据
+        const cases = [
+          {
+            id: 1,
+            avatar: 'A',
+            name: '张女士',
+            gender: '女',
+            age: 28,
+            serviceType: '优势分析',
+            problem: '工作多年，一直找不到方向，经常感到迷茫和焦虑',
+            solution: '通过MBTI和多元智能测评，发现其具有管理天赋，适合往管理方向发展',
+            result: '转岗后薪资提升40%，工作满意度显著提高',
+            date: '2024年1月'
+          },
+          {
+            id: 2,
+            avatar: 'B',
+            name: '李先生',
+            gender: '男',
+            age: 35,
+            serviceType: '人生规划',
+            problem: '面临职业转型，不确定是否应该转行',
+            solution: '综合分析显示其适合创业，当前正处于职业发展关键期',
+            result: '成功创业，事业发展良好',
+            date: '2024年2月'
+          },
+          {
+            id: 3,
+            avatar: 'C',
+            name: '王女士',
+            gender: '女',
+            age: 32,
+            serviceType: '优势分析',
+            problem: '感情反复分手，想要了解自己的感情模式',
+            solution: '通过性格分析和关系模式评估，揭示其在感情中的问题和改善方法',
+            result: '感情关系明显改善',
+            date: '2024年3月'
+          },
+          {
+            id: 4,
+            avatar: 'D',
+            name: '陈先生',
+            gender: '男',
+            age: 40,
+            serviceType: '战略决策',
+            problem: '事业停滞不前，家庭关系也有些紧张',
+            solution: '运用多维分析工具优化工作生活平衡策略',
+            result: '半年后事业有突破，家庭氛围明显改善',
+            date: '2024年4月'
+          }
+        ]
+        
+        const viewCaseDetail = (item) => {
+          showToast('详情页开发中')
+        }
+        
+        // 关于页面数据
+        const wechat = 'Talent_Discovery'
+        const phone = '166-2841-9139'
+        
+        const backgrounds = [
+          { icon: '🔬', title: '现代工具', desc: 'MBTI、哈佛多元智能、斯坦福人生设计' },
+          { icon: '⭐', title: '西方智慧', desc: '西方心理学经典理论与测评方法' },
+          { icon: '☯️', title: '传统智慧', desc: '传统智慧工具的现代应用' },
+          { icon: '🎯', title: '系统思维', desc: '全面认识优势，科学规划发展' }
+        ]
+        
+        const philosophies = [
+          { title: '多维融合', desc: '国际权威测评+传统智慧工具' },
+          { title: '优势分析', desc: '用专业工具认识你的性格优势' },
+          { title: '发展规划', desc: '系统思维规划人生发展路径' },
+          { title: '自在人生', desc: '激活天赋、还你自在' }
+        ]
+        
+        const copyWechat = () => {
+          navigator.clipboard.writeText(wechat).then(() => {
+            showToast('微信号已复制')
+          }).catch(() => {
+            showToast('复制失败，请手动复制')
+          })
+        }
+        
+        const makeCall = () => {
+          window.location.href = 'tel:' + phone.replace(/-/g, '')
+        }
+        
+        // 预约表单数据
+        const bookingForm = reactive({
+          serviceType: '',
+          name: '',
+          phone: '',
+          birthDate: '',
+          birthHour: '',
+          purpose: '',
+          preferDate: ''
+        })
+        
+        const bookingServiceTypes = [
+          { label: '天赋定位', value: 'talent' },
+          { label: '人生决策', value: 'decision' },
+          { label: '战略规划', value: 'strategy' },
+          { label: '关键节点规划', value: 'timing' }
+        ]
+        
+        const birthHours = [
+          { label: '子时 (23:00-00:59)', value: '子时' },
+          { label: '丑时 (01:00-02:59)', value: '丑时' },
+          { label: '寅时 (03:00-04:59)', value: '寅时' },
+          { label: '卯时 (05:00-06:59)', value: '卯时' },
+          { label: '辰时 (07:00-08:59)', value: '辰时' },
+          { label: '巳时 (09:00-10:59)', value: '巳时' },
+          { label: '午时 (11:00-12:59)', value: '午时' },
+          { label: '未时 (13:00-14:59)', value: '未时' },
+          { label: '申时 (15:00-16:59)', value: '申时' },
+          { label: '酉时 (17:00-18:59)', value: '酉时' },
+          { label: '戌时 (19:00-20:59)', value: '戌时' },
+          { label: '亥时 (21:00-22:59)', value: '亥时' }
+        ]
+        
+        const bookingSubmitting = ref(false)
+        
+        const selectBookingService = (value) => {
+          bookingForm.serviceType = value
+        }
+        
+        const validateBookingForm = () => {
+          if (!bookingForm.serviceType) {
+            showToast('请选择服务类型')
+            return false
+          }
+          if (!bookingForm.name.trim()) {
+            showToast('请输入姓名')
+            return false
+          }
+          if (!/^1[3-9]\d{9}$/.test(bookingForm.phone)) {
+            showToast('请输入正确的手机号')
+            return false
+          }
+          if (!bookingForm.birthDate) {
+            showToast('请选择出生日期')
+            return false
+          }
+          if (!bookingForm.birthHour) {
+            showToast('请选择出生时辰')
+            return false
+          }
+          return true
+        }
+        
+        // 飞书Webhook URL
+        const FEISHU_WEBHOOK_URL = 'https://open.feishu.cn/open-apis/bot/v2/hook/8ff2e795-bb88-44c8-8455-58c2715d638d'
+        
+        const submitBooking = async () => {
+          if (!validateBookingForm()) return
+          
+          bookingSubmitting.value = true
+          
+          try {
+            // 构建飞书消息
+            const serviceTypeMap = {
+              'talent': '天赋定位',
+              'decision': '人生决策',
+              'strategy': '战略规划',
+              'timing': '关键节点规划'
+            }
+            
+            const now = new Date()
+            const submitTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`
+            
+            const feishuMessage = {
+              msg_type: 'post',
+              content: {
+                post: {
+                  zh_cn: {
+                    title: '🎁 新的预约申请',
+                    content: [
+                      [[{"tag": "text", "text": "📋 服务类型：" + (serviceTypeMap[bookingForm.serviceType] || bookingForm.serviceType)}]],
+                      [[{"tag": "text", "text": "👤 姓名：" + bookingForm.name}]],
+                      [[{"tag": "text", "text": "📞 手机号：" + bookingForm.phone}]],
+                      [[{"tag": "text", "text": "🎂 出生日期：" + bookingForm.birthDate}]],
+                      [[{"tag": "text", "text": "🕐 出生时辰：" + bookingForm.birthHour}]],
+                      [[{"tag": "text", "text": "📝 咨询目的：" + (bookingForm.purpose || '未填写')}]],
+                      [[{"tag": "text", "text": "📅 期望预约时间：" + (bookingForm.preferDate || '未指定')}]],
+                      [[{"tag": "text", "text": "⏰ 提交时间：" + submitTime}]]
+                    ]
+                  }
+                }
+              }
+            }
+            
+            // 发送飞书通知（使用no-cors模式避免CORS问题）
+            fetch(FEISHU_WEBHOOK_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(feishuMessage),
+              mode: 'no-cors'
+            }).catch(err => {
+              console.log('飞书通知发送失败（可能因CORS限制，但数据仍会推送）', err)
+            })
+            
+            // 模拟提交
+            await new Promise(resolve => setTimeout(resolve, 1500))
+            
+            showToast('已提交，我们会尽快联系您')
+            
+            setTimeout(() => {
+              currentTab.value = 'index'
+              // 重置表单
+              bookingForm.serviceType = ''
+              bookingForm.name = ''
+              bookingForm.phone = ''
+              bookingForm.birthDate = ''
+              bookingForm.birthHour = ''
+              bookingForm.purpose = ''
+              bookingForm.preferDate = ''
+            }, 1500)
+          } catch (err) {
+            showToast('提交失败，请重试')
+          } finally {
+            bookingSubmitting.value = false
+          }
+        }
+        
+        return {
+          currentTab,
+          toastShow,
+          toastText,
+          showToast,
+          services,
+          advantages,
+          navigateToService,
+          goToTest,
+          goToBooking,
+          switchTab,
+          serviceTitle,
+          serviceSubtitle,
+          serviceDesc,
+          contentList,
+          flowSteps,
+          priceList,
+          goToBookingFromService,
+          testStep,
+          questions,
+          currentIndex,
+          selectedOption,
+          currentQuestion,
+          progressPercent,
+          selectTest,
+          selectOption,
+          prevQuestion,
+          nextQuestion,
+          resultData,
+          topIntelligences,
+          restartTest,
+          goToBookingFromTest,
+          cases,
+          viewCaseDetail,
+          wechat,
+          phone,
+          backgrounds,
+          philosophies,
+          copyWechat,
+          makeCall,
+          bookingForm,
+          bookingServiceTypes,
+          birthHours,
+          bookingSubmitting,
+          selectBookingService,
+          submitBooking
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>
