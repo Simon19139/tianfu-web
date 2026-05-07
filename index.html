@@ -2353,19 +2353,23 @@
             }
             
             // 发送飞书通知（飞书Webhook支持CORS）
-            fetch(FEISHU_WEBHOOK_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(feishuMessage)
-            }).then(res => res.json()).then(data => {
+            try {
+              const resp = await fetch(FEISHU_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(feishuMessage)
+              })
+              const data = await resp.json()
               if (data.StatusCode === 0) {
                 console.log('飞书通知发送成功')
               } else {
                 console.log('飞书通知发送失败：', data.StatusMessage)
+                showToast('通知推送异常：' + (data.StatusMessage || data.msg || '未知错误'))
               }
-            }).catch(err => {
+            } catch (err) {
               console.log('飞书通知发送失败：', err)
-            })
+              showToast('通知推送失败：' + err.message)
+            }
             
             // 模拟提交
             await new Promise(resolve => setTimeout(resolve, 1500))
